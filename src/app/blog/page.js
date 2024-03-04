@@ -5,7 +5,8 @@ async function getData() {
   const endpoint = `${domain}/api/posts`
   const res = await fetch(endpoint)
 
-  console.log(res)
+  console.log(`endpoint: ${endpoint}`)
+  console.log(`res.ok: ${res.ok}`)
 
   if (!res.ok) {
     throw new Error('Failed to fetch data')

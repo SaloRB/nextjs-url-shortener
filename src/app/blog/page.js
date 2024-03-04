@@ -9,9 +9,9 @@ async function getData() {
     throw new Error('Failed to fetch data')
   }
 
-  if (res.headers.get('content-type') !== 'application/json') {
-    return { items: [] }
-  }
+  // if (res.headers.get('content-type') !== 'application/json') {
+  //   return { items: [] }
+  // }
 
   return res.json()
 }

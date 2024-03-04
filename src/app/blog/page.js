@@ -5,7 +5,7 @@ async function getData() {
   const endpoint = `${domain}/api/posts`
   const res = await fetch(endpoint, { next: { revalidate: 10 } })
 
-  console.log(`response`, res)
+  // console.log(`response`, res)
   // console.log(`status`, res.status)
 
   if (!res.ok) {

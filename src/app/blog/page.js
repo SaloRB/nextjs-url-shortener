@@ -1,21 +1,22 @@
 import getDomain from '@/app/lib/getDomain'
 
 async function getData() {
-  const domain = getDomain()
-  const endpoint = `${domain}/api/posts`
-  const res = await fetch(endpoint, { next: { revalidate: 10 } })
+  // const domain = getDomain()
+  // const endpoint = `${domain}/api/posts`
+  // const res = await fetch(endpoint, { next: { revalidate: 10 } })
 
-  console.log(`endpoint`, endpoint)
+  // console.log(`endpoint`, endpoint)
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
+  // if (!res.ok) {
+  //   throw new Error('Failed to fetch data')
+  // }
 
-  if (res.headers.get('content-type') !== 'application/json') {
-    return { items: [] }
-  }
+  // if (res.headers.get('content-type') !== 'application/json') {
+  //   return { items: [] }
+  // }
 
-  return res.json()
+  // return res.json()
+  return { items: [] }
 }
 
 export default async function BlogPage() {

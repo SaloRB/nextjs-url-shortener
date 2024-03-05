@@ -9,24 +9,28 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core'
 
-export const LinksTable = pgTable(
-  'links',
+export const UsersTable = pgTable(
+  'users',
   {
     id: serial('id').primaryKey().notNull(),
-    url: text('url').notNull(),
-    short: varchar('short', { length: 50 }),
+    username: varchar('username', { length: 50 }).notNull(),
+    email: text('email'),
     createdAt: timestamp('created_at').defaultNow(),
   },
-  (links) => {
+  (users) => {
     return {
-      urlIndex: uniqueIndex('url_idx').on(links.url),
+      usernameIndex: uniqueIndex('username_idx').on(users.username),
     }
   }
 )
 
-export const LinksTableRelations = relations(LinksTable, ({ many }) => ({
-  visits: many(VisitsTable),
-}))
+export const LinksTable = pgTable('links', {
+  id: serial('id').primaryKey().notNull(),
+  url: text('url').notNull(),
+  short: varchar('short', { length: 50 }),
+  userId: integer('user_id').references(() => UsersTable.id),
+  createdAt: timestamp('created_at').defaultNow(),
+})
 
 export const VisitsTable = pgTable('visits', {
   id: serial('id').primaryKey().notNull(),
@@ -35,6 +39,18 @@ export const VisitsTable = pgTable('visits', {
     .references(() => LinksTable.id),
   createdAt: timestamp('created_at').defaultNow(),
 })
+
+export const UsersTableRelations = relations(LinksTable, ({ many }) => ({
+  links: many(LinksTable),
+}))
+
+export const LinksTableRelations = relations(LinksTable, ({ one, many }) => ({
+  visits: many(VisitsTable),
+  user: one(UsersTable, {
+    fields: [LinksTable.userId],
+    references: [UsersTable.id],
+  }),
+}))
 
 export const VisitsTableRelations = relations(VisitsTable, ({ one }) => ({
   link: one(LinksTable, {

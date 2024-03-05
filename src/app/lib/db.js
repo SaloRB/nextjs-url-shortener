@@ -19,14 +19,20 @@ export async function helloWorld() {
 }
 
 async function configureDatabase() {
-  const dbResponse = await sql`CREATE TABLE IF NOT EXISTS "links" (
+  await sql`CREATE TABLE IF NOT EXISTS "links" (
     "id" serial PRIMARY KEY NOT NULL,
     "url" text NOT NULL,
     "short" varchar(50),
+    "user_id" integer,
     "created_at" timestamp DEFAULT now()
   );`
 
-  await sql`CREATE UNIQUE INDEX IF NOT EXISTS "url_idx" ON "links" ((LOWER("url")));`
+  await sql`CREATE TABLE IF NOT EXISTS "users" (
+    "id" serial PRIMARY KEY NOT NULL,
+    "username" varchar(50) NOT NULL,
+    "email" text,
+    "created_at" timestamp DEFAULT now()
+  );`
 
   await sql`CREATE TABLE IF NOT EXISTS "visits" (
     "id" serial PRIMARY KEY NOT NULL,
@@ -34,19 +40,33 @@ async function configureDatabase() {
     "created_at" timestamp DEFAULT now()
   );`
 
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS "username_idx" ON "users" ("username");`
+
   await sql`DO $$ BEGIN
-  ALTER TABLE "visits" ADD CONSTRAINT "visits_link_id_links_id_fk" FOREIGN KEY ("link_id") REFERENCES "links"("id") ON DELETE no action ON UPDATE no action;
- EXCEPTION
-  WHEN duplicate_object THEN null;
- END $$;`
+   ALTER TABLE "links" ADD CONSTRAINT "links_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;`
+
+  await sql`DO $$ BEGIN
+   ALTER TABLE "visits" ADD CONSTRAINT "visits_link_id_links_id_fk" FOREIGN KEY ("link_id") REFERENCES "links"("id") ON DELETE no action ON UPDATE no action;
+  EXCEPTION
+   WHEN duplicate_object THEN null;
+  END $$;
+  `
 }
 
 configureDatabase().catch((err) => console.log('db config error', err))
 
 export async function addLink(url) {
   const short = randomShortStrings()
+  const user = await getSessionUser()
 
   const newLink = { url, short }
+  if (user) newLink['userId'] = user
+
+  console.log(newLink)
+
   let response = { message: `${url} is not valid. Please try again` }
   let responseStatus = 400
   try {
@@ -116,7 +136,7 @@ export async function getMinLinksAndVisits(limit, offset) {
     limit: lookupLimit,
     offset: lookupOffset,
     orderBy: [desc(LinksTable.createdAt)],
-    columns: { url: true, short: true, createdAt: true },
+    columns: { url: true, short: true, createdAt: true, userId: true },
     with: { visits: { columns: { createdAt: true } } },
     // extras: { count: sqld`count(${VisitsTable.id})`.as('count') },
   })

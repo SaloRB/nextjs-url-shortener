@@ -8,6 +8,3 @@ export async function helloWorld() {
   const end = new Date()
   return { dbNow, latency: Math.abs(end - start) }
 }
-
-export const runtime = 'edge'
-export const preferredRegion = 'iad1'

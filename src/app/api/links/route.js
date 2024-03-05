@@ -34,6 +34,9 @@ export async function POST(request) {
   }
 
   const dbResponse = await addLink(url)
+  const responseData = dbResponse && dbResponse.data ? dbResponse.data : {}
+  const responseStatus =
+    dbResponse && dbResponse.status ? dbResponse.status : 500
 
-  return NextResponse.json(dbResponse, { status: 201 })
+  return NextResponse.json(responseData, { status: responseStatus })
 }

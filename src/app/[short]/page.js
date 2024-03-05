@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 import { getShortLinkRecord } from '@/app/lib/db'
 
@@ -9,5 +9,8 @@ export default async function ShortPage({ params }) {
   const [record] = await getShortLinkRecord(short)
   if (!record) notFound()
 
-  return <>{JSON.stringify(record)}</>
+  const { url } = record
+  if (!url) notFound()
+
+  redirect(url, 'push')
 }

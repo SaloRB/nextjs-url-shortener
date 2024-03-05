@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 
 import isValidUrl from '@/app/lib/isValidUrl'
+import { getMinLinks } from '@/app/lib/db'
+import { addLink } from '@/app/lib/db'
+
+export async function GET(request) {
+  const links = await getMinLinks()
+  return NextResponse.json(links, { status: 200 })
+}
 
 export async function POST(request) {
   // using standar HTML form
@@ -26,5 +33,7 @@ export async function POST(request) {
     )
   }
 
-  return NextResponse.json(data, { status: 201 })
+  const dbResponse = await addLink(url)
+
+  return NextResponse.json(dbResponse, { status: 201 })
 }

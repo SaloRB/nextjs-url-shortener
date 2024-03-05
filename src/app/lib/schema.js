@@ -38,7 +38,7 @@ export const VisitsTable = pgTable('visits', {
 
 export const VisitsTableRelations = relations(VisitsTable, ({ one }) => ({
   link: one(LinksTable, {
-    field: [VisitsTable.linkId],
+    fields: [VisitsTable.linkId],
     references: [LinksTable.id],
   }),
 }))

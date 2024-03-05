@@ -1,12 +1,13 @@
 import { neon } from '@neondatabase/serverless'
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, sql as sqld } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/neon-http'
 
 import randomShortStrings from './randomShortString'
 import { LinksTable, VisitsTable } from './schema'
+import * as schema from './schema'
 
 const sql = neon(process.env.DATABASE_URL)
-const db = drizzle(sql)
+const db = drizzle(sql, { schema })
 
 export async function helloWorld() {
   const start = new Date()
@@ -94,4 +95,27 @@ export async function getMinLinks(limit, offset) {
     .limit(lookupLimit)
     .offset(lookupOffset)
     .orderBy(desc(LinksTable.createdAt))
+}
+
+export async function getMinLinksAndVisits(limit, offset) {
+  const lookupLimit = limit ? limit : 10
+  const lookupOffset = offset ? offset : 0
+  // return await db
+  //   .select({
+  //     id: LinksTable.id,
+  //     url: LinksTable.url,
+  //     timestamp: LinksTable.createdAt,
+  //   })
+  //   .from(LinksTable)
+  //   .limit(lookupLimit)
+  //   .offset(lookupOffset)
+  //   .orderBy(desc(LinksTable.createdAt))
+  return await db.query.LinksTable.findMany({
+    limit: lookupLimit,
+    offset: lookupOffset,
+    orderBy: [desc(LinksTable.createdAt)],
+    columns: { url: true, short: true, createdAt: true },
+    with: { visits: { columns: { createdAt: true } } },
+    // extras: { count: sqld`count(${VisitsTable.id})`.as('count') },
+  })
 }

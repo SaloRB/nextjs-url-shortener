@@ -1,4 +1,6 @@
+import { relations } from 'drizzle-orm'
 import {
+  integer,
   pgTable,
   serial,
   text,
@@ -21,3 +23,22 @@ export const LinksTable = pgTable(
     }
   }
 )
+
+export const LinksTableRelations = relations(LinksTable, ({ many }) => ({
+  visits: many(VisitsTable),
+}))
+
+export const VisitsTable = pgTable('visits', {
+  id: serial('id').primaryKey().notNull(),
+  linkId: integer('link_id')
+    .notNull()
+    .references(() => LinksTable.id),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+export const VisitsTableRelations = relations(VisitsTable, ({ one }) => ({
+  link: one(LinksTable, {
+    field: [VisitsTable.linkId],
+    references: [LinksTable.id],
+  }),
+}))

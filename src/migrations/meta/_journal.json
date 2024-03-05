@@ -15,6 +15,13 @@
       "when": 1709666299885,
       "tag": "0001_spooky_mesmero",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709667788802,
+      "tag": "0002_military_tomorrow_man",
+      "breakpoints": true
     }
   ]
 }

@@ -23,6 +23,7 @@ async function configureDatabase() {
     "short" varchar(50),
     "created_at" timestamp DEFAULT now()
   );`
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS "url_idx" ON "links" ((LOWER("url")));`
 }
 
 configureDatabase().catch((err) => console.log('db config error', err))

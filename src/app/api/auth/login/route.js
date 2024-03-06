@@ -22,7 +22,7 @@ export async function POST(request) {
 
   const dbResponse = await getUserByUsername(username)
   const { id: userId, password: userHash } = dbResponse[0]
-  const isValidPasswordRequest = isMatchingPassword(password, userHash)
+  const isValidPasswordRequest = await isMatchingPassword(password, userHash)
   if (!isValidPasswordRequest) {
     return NextResponse.json(
       { message: 'Invalid credentials, please try again' },

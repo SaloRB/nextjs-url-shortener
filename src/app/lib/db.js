@@ -30,6 +30,7 @@ async function configureDatabase() {
   await sql`CREATE TABLE IF NOT EXISTS "users" (
     "id" serial PRIMARY KEY NOT NULL,
     "username" varchar(50) NOT NULL,
+    "password" varchar(75) NOT NULL,
     "email" text,
     "created_at" timestamp DEFAULT now()
   );`

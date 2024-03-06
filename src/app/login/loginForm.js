@@ -23,6 +23,10 @@ export default function LoginForm({ didSubmit }) {
 
     const response = await fetch(endpoint, options)
 
+    if (response.status === 200) {
+      window.location.href = '/'
+    }
+
     const result = await response.json()
 
     setResults(result)

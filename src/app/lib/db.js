@@ -121,6 +121,13 @@ export async function registerUser(newUserData) {
   return { data: response, status: 201 }
 }
 
+export async function getUserByUsername(username) {
+  return await db
+    .select()
+    .from(UsersTable)
+    .where(eq(UsersTable.username, username))
+}
+
 export async function getLinks(limit, offset) {
   const lookupLimit = limit ? limit : 10
   const lookupOffset = offset ? offset : 0

@@ -22,7 +22,6 @@ async function getData() {
 export default async function BlogPage() {
   const data = await getData()
   const dbResponse = await helloWorld()
-  console.log('dbResponse', dbResponse)
   const items = data && data.items ? [...data.items] : []
   return (
     <main>

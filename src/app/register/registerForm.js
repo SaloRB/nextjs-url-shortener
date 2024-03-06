@@ -5,10 +5,6 @@ import { useState } from 'react'
 export default function RegisterForm({ didSubmit }) {
   const [results, setResults] = useState(null)
 
-  // const verifyPassword = (event) => {
-  //   console.log(event.target.value)
-  // }
-
   const handleFormSubmit = async (event) => {
     event.preventDefault()
 

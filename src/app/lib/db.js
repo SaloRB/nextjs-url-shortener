@@ -108,7 +108,6 @@ export async function registerUser(newUserData) {
 
     responseStatus = 201
   } catch ({ name, message }) {
-    console.log(message)
     if (
       `${message}`.includes('duplicate key value violates unique constraint')
     ) {

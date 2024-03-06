@@ -33,18 +33,6 @@ export const decodeUserSession = async (jwt) => {
   }
 }
 
-// async function verifySession() {
-//   const userId = '1'
-//   const jwtToken = await encodeUserSession(userId)
-//   const user = await decodeUserSession(jwtToken)
-
-//   console.log(user, userId === user)
-// }
-
-// verifySession()
-//   .then(() => console.log('verify'))
-//   .catch((error) => console.log(error))
-
 export const setSessionUser = async (userId) => {
   const newSessionValue = await encodeUserSession(userId)
 

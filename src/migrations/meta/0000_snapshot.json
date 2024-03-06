@@ -1,5 +1,5 @@
 {
-  "id": "0af6bd54-6d58-41f8-8f59-82e6d2496310",
+  "id": "fc9e91ba-b3fa-476f-b113-6338dd9283c3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -77,7 +77,7 @@
         },
         "password": {
           "name": "password",
-          "type": "varchar(75)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },

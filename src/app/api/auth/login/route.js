@@ -15,13 +15,35 @@ export async function POST(request) {
   const isValidData = username && password
   if (!isValidData) {
     return NextResponse.json(
-      { error: 'Username and password are required' },
+      { message: 'Username and password are required' },
       { status: 400 }
     )
   }
 
   const dbResponse = await getUserByUsername(username)
+  if (!dbResponse) {
+    return NextResponse.json(
+      { message: 'Invalid credentials.' },
+      { status: 400 }
+    )
+  }
+
+  const userRecord = dbResponse[0]
+  if (!userRecord) {
+    return NextResponse.json(
+      { message: 'Invalid credentials.' },
+      { status: 400 }
+    )
+  }
+
   const { id: userId, password: userHash } = dbResponse[0]
+  if (!userId || !userHash) {
+    return NextResponse.json(
+      { message: 'Invalid credentials.' },
+      { status: 400 }
+    )
+  }
+
   const isValidPasswordRequest = await isMatchingPassword(password, userHash)
   if (!isValidPasswordRequest) {
     return NextResponse.json(

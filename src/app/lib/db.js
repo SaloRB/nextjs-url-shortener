@@ -114,10 +114,12 @@ export async function registerUser(newUserData) {
       response = {
         message: `${username} is taken. Try another one`,
       }
+
+      responseStatus = 400
     }
   }
 
-  return { data: response, status: 201 }
+  return { data: response, status: responseStatus }
 }
 
 export async function getUserByUsername(username) {
